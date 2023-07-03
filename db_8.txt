@@ -1,0 +1,143 @@
+���� ������� ����� ������ � �������������� ����������, ������ ��� � �������������� ����������, ���� ���� ��������, ��� ������������ ��� �������:)
+
+1.	�������� �������� ���� ������� �������� Rifkin.
+SELECT amt
+FROM Orders
+WHERE snum = (
+    SELECT snum
+    FROM Salespeople
+    WHERE sname = 'Rifkin'
+)
+
+2.	����������  ������������ ���� ���������, ������������� ���������� � ����
+SELECT sname, com
+FROM Salespeople
+WHERE snum IN (
+    SELECT snum
+    FROM Customers
+    WHERE city = 'Rome'
+)
+
+
+3.	�������� ������, ������� ��������� ���������� ������� ������� ���� ��������.
+SELECT cname, rating
+FROM Customers
+WHERE rating < (
+    SELECT AVG(rating)
+    FROM Customers
+)
+
+4.	���������� ������ ���������� ���������� � ���������� ���������.
+SELECT DISTINCT city
+FROM Customers
+WHERE rating = (
+    SELECT MIN(rating)
+    FROM Customers
+)
+
+5.	�������� ������, ������� ������� �� ������ ������� Liu
+SELECT *
+FROM Orders
+WHERE cnum = (
+    SELECT cnum
+    FROM Customers
+    WHERE cname = 'Liu'
+)
+
+6.	���������� ������ ����� ������, ������� ��� �������� ��������� � ���� (��������� � �������)
+SELECT amt
+FROM Orders
+WHERE snum = (
+    SELECT snum
+    FROM Salespeople
+    WHERE city = (
+        SELECT city
+        FROM Customers
+        WHERE city = 'Rome'
+    )
+)
+
+7.	�������� ������ ������� ������� ���� �������� ������������� ��������� Serres, ������� ������� ����� �� 1990-05-10.
+SELECT cname
+FROM Customers
+WHERE snum = (
+    SELECT snum
+ё2    FROM Salespeople
+    WHERE sname = 'Serres'
+) AND cnum IN (
+    SELECT cnum
+    FROM Orders
+    WHERE odate < '1990-04-10 00:00:00'
+)
+
+8. �������� ������, ������� ������� ������������ ������� ��������� ��� ��������� ������� ������������ ������ 0,11.
+
+SELECT MAX(rating)
+FROM Customers
+WHERE snum IN(
+    SELECT snum
+    FROM Salespeople
+    WHERE com > 0.11
+)
+
+
+9. �������� ������, ������� ������� ������ ��� �������, ������� ������� ����� 1990-04-10 ��� ��������� ������� ���� 1500
+
+SELECT onum, odate, amt
+FROM Orders
+WHERE date(odate) > '1990-04-10 00:00:00' OR amt > 1500
+
+
+10. �������� ������, ������� ������� �������� ������� ��������� ������ �������� �������� ����� ������.
+
+SELECT sname
+FROM Salespeople
+WHERE snum IN(
+    SELECT snum
+    FROM Orders
+    WHERE amt =(
+        SELECT MIN(amt)
+        FROM Orders
+        ORDER BY snum
+    )
+)
+
+
+11. �������� ������, ������� ��������� ����� ������ ����� � ������� (������ ����������� ���������� �� ������� ��� ������������ �� �������)
+
+SELECT SUM(amt) 
+FROM Orders
+WHERE snum IN(
+    SELECT snum 
+    FROM Salespeople
+    WHERE city = 'London'
+    OR cnum IN(
+    SELECT cnum
+    FROM Customers
+    WHERE city = 'London'
+)
+)
+
+12. �������� ������, ������� ����� ���������, ������� ����� � �������, � ������� ��� �� ������ ���������� � ��������� ���� 100
+
+SELECT sname 
+FROM Salespeople
+WHERE city IN(
+    SELECT city
+    FROM Customers
+    WHERE rating <= 100
+)
+
+
+13. �������� ������, ������� ��������� ������� ������� � ���� ����� ���������� � ������������ �� ������ �������.
+
+SELECT AVG(amt) 
+FROM Orders
+WHERE snum IN(
+    SELECT snum
+    FROM Customers
+    WHERE city NOT IN(
+        SELECT city
+        FROM Salespeople
+    )
+)
